@@ -3,14 +3,18 @@
 window.onload = function() {
 
 	var outputClock = '';
-	var clock = document.querySelector('div');
+	var clock = document.querySelector('span');
 	var months = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
+	var timeDate;
+	var format;
+	var userDate;
+	var userFormat;
 
 	function initClock (timeDate, format) {
+		// debugger
+		timeDate = timeDate || new Date();
+		format = format || ['hours', 'minutes', 'seconds'];
 
-		var timeDate = timeDate || new Date();
-		var format = format || ['hours', 'minutes', 'seconds'];
-		
 		if (arguments.length === 1 && arguments[0] instanceof Date) {
 			timeDate = arguments[0];
 			format = ['hours', 'minutes', 'seconds'];
@@ -20,54 +24,68 @@ window.onload = function() {
 				format = arguments[0];
 			}
 
-		for (var i = 0; i < format.length; i++) {
+		userDate = timeDate;
+		userFormat = format;
+		}
 
-				switch (format[i]) {
+	function createClock() {
+		for (var i = 0; i < userFormat.length; i++) {
 
-					case 'seconds':
-						outputClock += timeDate.getSeconds() + ' сек. ';
-						break;
-					case 'minutes':
-						outputClock += timeDate.getMinutes() + ' мин. ';
-						break;
-					case 'hours':
-						outputClock += timeDate.getHours() + ' ч. ';
-						break;
-					case 'day':
-						outputClock += timeDate.getDate() + ' д. ';
-						break;
-					case 'month':
-						outputClock += months[timeDate.getMonth()] + ' мес. ';
-						break;
-					case 'year':
-						outputClock += timeDate.getFullYear() + ' г. ';
-						break;
-					default:
-						alert('Выбран неверный формат даты');
+			switch (userFormat[i]) {
+
+				case 'seconds':
+				// debugger;
+					if (userDate !== 'undefined') {
+						userDate.setSeconds(userDate.getSeconds() + 1);
+					}
+					outputClock += userDate.getSeconds() + ' сек. ';
+					break;
+				case 'minutes':
+					outputClock += userDate.getMinutes() + ' мин. ';
+					break;
+				case 'hours':
+					outputClock += userDate.getHours() + ' ч. ';
+					break;
+				case 'day':
+					outputClock += userDate.getDate() + ' д. ';
+					break;
+				case 'month':
+					outputClock += months[userDate.getMonth()] + ' мес. ';
+					break;
+				case 'year':
+					outputClock += userDate.getFullYear() + ' г. ';
+					break;
+				default:
+					outputClock = 'Ошибка! Проверьте правильность формата';
 				}
 			}
 		return outputClock;
 	}
 
+// Activate one of this functions:
+	//-- Current hh:mm:ss
+		initClock();
+	//-- Some date and user format
+		// initClock(new Date(2012,7,24), ['year', 'hours', 'minutes', 'seconds']);
+	//-- Some date and time + user format
+		// initClock(new Date(2012,7,24,4,5,6), ['month', 'hours', 'seconds']);
+	//-- Current date and user format
+		// initClock(new Date(), ['minutes', 'seconds', 'year', 'month']);
+	//-- Only user format
+		// initClock(['month','day','hours', 'seconds']);
+	//-- Only some date
+		// initClock(new Date(2012,7,24));
+	//-- Wrong format
+		// initClock(new Date(2011,8,11), ['smth','wrong','lolWhat']);
+
 	setInterval(function() {
-// debugger;
-			clock.innerHTML = initClock();
+			createClock();
+			clock.innerHTML = outputClock;
 				clock.style.color = '#1FF8D0';
 				clock.style.backgroundColor = 'black';
 				clock.style.padding = '15px';
-				clock.style.margin = '10px';
+				clock.style.margin = '20px';
 				clock.style.fontSize = '120%';
 			outputClock = '';
 		}, 1000);
 }
-	
-	// Current hh:mm:ss
-		// initClock();
-	// Some date and user format
-		// initClock(new Date(2012,7,24), ['year', 'hours', 'minutes', 'seconds']);
-	//Current date and user format
-		// initClock(new Date(), ['minutes', 'seconds', 'year', 'month']);
-	// Only user format
-		// initClock(['month','day','hours']);
-	// Only some date
-		// initClock(new Date(2012,7,24));
